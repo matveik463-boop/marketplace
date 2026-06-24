@@ -1,0 +1,259 @@
+/* ===== Основные переменные ===== */
+:root {
+  --bg-primary: #F9FAFB;
+  --bg-secondary: #FFFFFF;
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --border: #E5E7EB;
+  --accent: #4F46E5;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  --transition-speed: 0.3s;
+}
+
+.dark {
+  --bg-primary: #0F172A;
+  --bg-secondary: #1E293B;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --border: #334155;
+  --accent: #818CF8;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+}
+
+/* Гарантированно меняем фон всего документа */
+html.dark, 
+html.dark body {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+  position: relative;
+}
+
+/* ===== Фоновые частицы ===== */
+#particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.1;
+  animation: float linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 0.1; }
+  90% { opacity: 0.1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ===== Плавное появление контента ===== */
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Карточки изначально скрыты для анимации */
+.listing-card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.listing-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Переопределение Tailwind-классов для тёмной темы ===== */
+.dark nav,
+.dark .navbar,
+.dark .fixed {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.dark .text-gray-700,
+.dark .text-gray-800,
+.dark .text-gray-900,
+.dark a:not(.bg-clip-text),
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+.dark p, .dark span, .dark label {
+  color: var(--text-primary) !important;
+}
+
+.dark .bg-white,
+.dark .bg-white\/80,
+.dark .bg-white\/90 {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: #1E293B !important;
+}
+
+.dark .border,
+.dark .border-gray-100,
+.dark .border-gray-200 {
+  border-color: var(--border) !important;
+}
+
+.dark .shadow-lg,
+.dark .shadow-sm,
+.dark .shadow-md,
+.dark .shadow-xl {
+  box-shadow: var(--shadow) !important;
+}
+
+/* ===== Glass-эффект ===== */
+.glass {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.dark .glass {
+  background: rgba(30,41,59,0.7);
+  border-color: rgba(51,65,85,0.5);
+}
+
+/* ===== Карточки объявлений ===== */
+.card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, background-color var(--transition-speed);
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== Ripple-эффект для кнопок ===== */
+button {
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s, transform 0.1s;
+}
+button:active {
+  transform: scale(0.97);
+}
+button .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple-effect 0.6s ease-out;
+  pointer-events: none;
+}
+@keyframes ripple-effect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.dark button {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* ===== Поля ввода ===== */
+input, textarea, select {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, background-color var(--transition-speed);
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ===== Анимационный оверлей для смены темы ===== */
+#theme-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.overlay-circle {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.overlay-circle.expanding {
+  background: #F9FAFB;
+  transform: scale(0);
+}
+
+.overlay-circle.collapsing {
+  background: #0F172A;
+  transform: scale(1);
+}
+
+/* ===== Убираем резкие фокус-обводки ===== */
+#theme-toggle:focus,
+#theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ===== Пагинация в тёмной теме ===== */
+.dark .pagination button {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-primary);
+}
+.dark .pagination button:hover {
+  background: var(--accent);
+  color: white;
+}
+.dark .pagination button.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* ===== Живой градиент на главной кнопке поиска ===== */
+#search-btn {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED, #EC4899);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+  transition: box-shadow 0.3s;
+}
+#search-btn:hover {
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

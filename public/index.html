@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace — найди всё</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; }
+    .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Фоновые частицы -->
+  <div id="particles-container"></div>
+
+  <!-- Навигация -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+      <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
+      <div class="flex items-center gap-4">
+        <a href="create-listing.html" class="text-gray-700 hover:text-indigo-600 font-medium transition">+ Подать объявление</a>
+        <a href="profile.html" class="text-gray-700 hover:text-indigo-600 font-medium transition">Личный кабинет</a>
+        <a href="login.html" id="login-link" class="text-gray-700 hover:text-indigo-600 font-medium transition">Войти</a>
+        <a href="register.html" id="register-link" class="text-gray-700 hover:text-indigo-600 font-medium transition">Регистрация</a>
+        <span id="user-name" class="hidden font-medium text-gray-900"></span>
+        <div id="notification-bell" class="hidden relative cursor-pointer text-xl">
+          🔔 <span id="notification-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
+        </div>
+        <button id="logout-btn" class="hidden bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-lg text-sm">Выйти</button>
+        <button id="theme-toggle" class="text-2xl hover:scale-110 transition-transform">🌓</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Главный контейнер -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+    <!-- Поиск и фильтры -->
+    <div class="glass p-6 rounded-2xl shadow-lg mb-8 fade-in">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <input type="text" id="search-input" placeholder="Что ищете?" class="col-span-2 px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 outline-none transition">
+        <select id="category-select" class="px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+          <option value="all">Все категории</option>
+          <option value="electronics">Электроника</option>
+          <option value="clothing">Одежда</option>
+          <option value="auto">Авто</option>
+          <option value="realty">Недвижимость</option>
+          <option value="other">Другое</option>
+        </select>
+        <input type="number" id="min-price" placeholder="Цена от" class="px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+        <input type="number" id="max-price" placeholder="Цена до" class="px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+      </div>
+      <div class="mt-4 flex justify-center">
+        <button id="search-btn" class="text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all">🔍 Найти</button>
+      </div>
+    </div>
+
+    <!-- Сетка объявлений -->
+    <div id="listings-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Динамическая загрузка -->
+    </div>
+
+    <!-- Пагинация -->
+    <div id="pagination" class="flex justify-center mt-8 gap-2"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      App.init();
+      App.loadListings();
+      document.getElementById('search-btn').addEventListener('click', () => App.loadListings(1));
+      document.getElementById('search-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') App.loadListings(1);
+      });
+    });
+
+    // Генерация частиц
+    const particlesContainer = document.getElementById('particles-container');
+    for (let i = 0; i < 25; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      const size = Math.random() * 4 + 1;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+      particle.style.animationDelay = Math.random() * 10 + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Анимация появления карточек при скролле
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    // После загрузки объявлений отслеживаем карточки
+    const listingsContainer = document.getElementById('listings-container');
+    if (listingsContainer) {
+      const cardObserver = new MutationObserver(() => {
+        document.querySelectorAll('.listing-card').forEach(card => observer.observe(card));
+      });
+      cardObserver.observe(listingsContainer, { childList: true, subtree: true });
+    }
+  </script>
+</body>
+</html>

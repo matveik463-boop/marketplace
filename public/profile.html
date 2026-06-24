@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль — Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="antialiased bg-gray-50">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+      <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
+      <div class="flex items-center gap-4">
+        <a href="wallet.html" class="text-gray-700 hover:text-indigo-600 font-medium transition">💰 Кошелёк</a>
+        <button id="logout-btn" class="hidden bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-lg text-sm">Выйти</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto px-4 pt-24 pb-12">
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">👤 Мой профиль</h2>
+      <div id="profile-info" class="space-y-2"></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">📦 Мои объявления</h3>
+      <div id="my-listings" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl p-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">⭐ Мои отзывы</h3>
+      <div id="my-reviews" class="space-y-3"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    if (!App.getToken()) window.location.href = 'login.html';
+    async function loadProfile() {
+      const res = await fetch('/api/profile', { headers: { 'Authorization': 'Bearer ' + App.getToken() } });
+      const data = await res.json();
+      const user = data.user;
+      document.getElementById('profile-info').innerHTML = `
+        <p><strong>Имя:</strong> ${user.name}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Телефон:</strong> ${user.phone || 'не указан'}</p>
+        <p><strong>Рейтинг:</strong> ${'⭐'.repeat(Math.round(user.rating || 0))} (${(user.rating || 0).toFixed(1)})</p>
+      `;
+      const container = document.getElementById('my-listings');
+      container.innerHTML = data.listings.map(l => `
+        <div class="bg-gray-50 p-4 rounded-xl">
+          <h4 class="font-semibold"><a href="listing.html?id=${l.id}" class="text-indigo-600 hover:underline">${l.title}</a></h4>
+          <p class="text-gray-700 font-medium">${l.price} ₽</p>
+          <p class="text-sm ${l.status === 'active' ? 'text-green-600' : l.status === 'sold' ? 'text-red-600' : 'text-gray-500'}">${l.status === 'active' ? '🟢 Активно' : l.status === 'sold' ? '🔴 Продано' : '⚪ Архив'}</p>
+        </div>
+      `).join('') || '<p class="text-gray-400">Нет объявлений</p>';
+      const revRes = await fetch('/api/reviews/user/' + user.id);
+      const reviews = await revRes.json();
+      const revContainer = document.getElementById('my-reviews');
+      revContainer.innerHTML = reviews.length ? reviews.map(r => `
+        <div class="bg-gray-50 p-3 rounded-xl">
+          <strong>${r.authorName}</strong> ${'⭐'.repeat(r.rating)}<br>
+          <small>${r.text || ''}</small>
+        </div>
+      `).join('') : '<p class="text-gray-400">Нет отзывов</p>';
+    }
+    loadProfile();
+  </script>
+</body>
+</html>

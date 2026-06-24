@@ -1,0 +1,24 @@
+{
+  "name": "marketplace",
+  "version": "1.0.0",
+  "description": "Simple Avito-like marketplace",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "joi": "^18.2.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.8.3",
+    "sql.js": "^1.10.3",
+    "stripe": "^22.2.3",
+    "uuid": "^9.0.0"
+  }
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация — Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="antialiased bg-gray-50 flex items-center justify-center min-h-screen">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">✨ Регистрация</h2>
+    <form id="register-form" class="space-y-4">
+      <input type="text" id="name" placeholder="Имя" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+      <input type="email" id="email" placeholder="Email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+      <input type="password" id="password" placeholder="Пароль (мин. 6 символов)" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+      <input type="tel" id="phone" placeholder="Телефон (необязательно)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+      <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition">Зарегистрироваться</button>
+    </form>
+    <p class="text-center mt-4 text-gray-600">Уже есть аккаунт? <a href="login.html" class="text-indigo-600 hover:underline">Войти</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('register-form');
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = 'color: red; text-align: center; margin-top: 10px;';
+    form.parentNode.insertBefore(errorDiv, form.nextSibling);
+
+    let countdownInterval = null;
+
+    function startCountdown(seconds) {
+      clearInterval(countdownInterval);
+      let remaining = seconds;
+      const update = () => {
+        errorDiv.textContent = `Слишком много попыток. Подождите ${remaining} сек.`;
+        if (remaining <= 0) {
+          clearInterval(countdownInterval);
+          errorDiv.textContent = '';
+        }
+        remaining--;
+      };
+      update();
+      countdownInterval = setInterval(update, 1000);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const phone = document.getElementById('phone').value;
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, phone })
+        });
+
+        const data = await res.json();
+
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          window.location.href = 'index.html';
+        } else {
+          if (res.status === 429 && data.retryAfter) {
+            startCountdown(data.retryAfter);
+          } else {
+            errorDiv.textContent = data.error || 'Ошибка регистрации';
+            setTimeout(() => { errorDiv.textContent = ''; }, 3000);
+          }
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Ошибка соединения с сервером';
+        setTimeout(() => { errorDiv.textContent = ''; }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>
