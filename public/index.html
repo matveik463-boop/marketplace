@@ -31,13 +31,23 @@
     </div>
   </nav>
 
-  <!-- Мобильная нижняя панель -->
+  <!-- Мобильная нижняя панель (glass-radio-group) -->
   <div class="mobile-nav" style="display: none;">
-    <a href="index.html" class="active"><span class="icon">🏠</span>Главная</a>
-    <a href="create-listing.html"><span class="icon">➕</span>Подать</a>
-    <a href="wallet.html"><span class="icon">💰</span>Кошелёк</a>
-    <a href="profile.html"><span class="icon">👤</span>Профиль</a>
-    <button id="theme-toggle-mobile"><span class="icon">🌓</span>Тема</button>
+    <div class="glass-radio-group">
+      <input type="radio" id="glass-home" name="mobile-nav" checked>
+      <label for="glass-home" onclick="window.location.href='index.html'"><span>🏠</span> Главная</label>
+
+      <input type="radio" id="glass-create" name="mobile-nav">
+      <label for="glass-create" onclick="window.location.href='create-listing.html'"><span>➕</span> Подать</label>
+
+      <input type="radio" id="glass-wallet" name="mobile-nav">
+      <label for="glass-wallet" onclick="window.location.href='wallet.html'"><span>💰</span> Кошелёк</label>
+
+      <input type="radio" id="glass-profile" name="mobile-nav">
+      <label for="glass-profile" onclick="window.location.href='profile.html'"><span>👤</span> Профиль</label>
+
+      <div class="glass-glider"></div>
+    </div>
   </div>
 
   <!-- Контент -->
