@@ -47,7 +47,14 @@
           <span class="text-gray-700 font-medium text-sm sm:text-base">Фото (до 5)</span>
           <input type="file" name="images" multiple accept="image/*" class="w-full mt-1 sm:mt-2 text-sm sm:text-base">
         </label>
-        <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base">Опубликовать</button>
+        <!-- Заменённая кнопка "Опубликовать" -->
+        <button type="submit" class="cir-btn w-full justify-center">
+          <svg class="cir-btn__arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.3335 8H12.6668" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.6665 4L12.6665 8L8.6665 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Опубликовать
+        </button>
       </form>
       <div id="create-status" class="mt-3 sm:mt-4 text-center"></div>
     </div>
