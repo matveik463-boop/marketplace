@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -20,7 +22,7 @@ const server = http.createServer(app);
 // Настройка CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:3000'];
+  : ['http://localhost:3000', 'https://marketplace-production-33bc.up.railway.app'];
 
 const io = new Server(server, {
   cors: {
@@ -31,6 +33,7 @@ const io = new Server(server, {
 
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
+const RAILWAY_URL = process.env.RAILWAY_URL || 'https://marketplace-production-33bc.up.railway.app';
 
 // Безопасность с правильной CSP
 app.use(
@@ -42,7 +45,7 @@ app.use(
         styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:", "blob:"],
-        connectSrc: ["'self'", "ws://localhost:3000", "wss://localhost:3000"],
+        connectSrc: ["'self'", "ws://localhost:3000", "wss://localhost:3000", "wss://marketplace-production-33bc.up.railway.app"],
         frameSrc: ["'self'", "https://checkout.stripe.com"],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
@@ -398,8 +401,8 @@ app.post('/api/stripe/create-checkout-session', authenticateToken, paymentLimite
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `http://localhost:${PORT}/api/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:${PORT}/wallet.html`,
+      success_url: `${RAILWAY_URL}/api/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${RAILWAY_URL}/wallet.html`,
       client_reference_id: req.user.id,
       metadata: {
         userId: req.user.id
@@ -657,7 +660,7 @@ initDatabase().then(({ run: _run, get: _get, all: _all }) => {
   }
 
   server.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);
