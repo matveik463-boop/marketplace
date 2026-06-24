@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Кошелёк — Marketplace</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css">
@@ -10,35 +10,35 @@
 </head>
 <body class="antialiased bg-gray-50">
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-      <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
-      <div class="flex items-center gap-4">
-        <a href="profile.html" class="text-gray-700 hover:text-indigo-600 font-medium transition">👤 Профиль</a>
-        <button id="logout-btn" class="hidden bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-lg text-sm">Выйти</button>
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex justify-between items-center h-auto sm:h-16 py-2 sm:py-0 flex-wrap">
+      <a href="index.html" class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
+      <div class="flex items-center gap-2 sm:gap-4 flex-wrap">
+        <a href="profile.html" class="text-gray-700 hover:text-indigo-600 font-medium transition text-sm sm:text-base">👤 Профиль</a>
+        <button id="logout-btn" class="hidden bg-gray-200 hover:bg-gray-300 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm">Выйти</button>
       </div>
     </div>
   </nav>
 
-  <div class="max-w-lg mx-auto px-4 pt-24 pb-12">
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 text-center">
-      <h2 class="text-2xl font-bold text-gray-800 mb-2">💰 Мой кошелёк</h2>
-      <p class="text-gray-600">Баланс</p>
-      <p id="balance-amount" class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">0 ₽</p>
+  <div class="max-w-lg mx-auto px-2 sm:px-4 pt-20 sm:pt-24 pb-8 sm:pb-12">
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-4 sm:mb-6 text-center">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2">💰 Мой кошелёк</h2>
+      <p class="text-gray-600 text-sm sm:text-base">Баланс</p>
+      <p id="balance-amount" class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">0 ₽</p>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
-      <label class="text-gray-700 font-medium mb-2 block">Пополнить вручную</label>
-      <div class="flex gap-2">
-        <input type="number" id="deposit-amount" placeholder="Сумма" class="flex-1 px-4 py-2 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
-        <button id="deposit-btn" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-lg transition">Пополнить</button>
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-4 sm:mb-6">
+      <label class="text-gray-700 font-medium mb-2 block text-sm sm:text-base">Пополнить вручную</label>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input type="number" id="deposit-amount" placeholder="Сумма" class="flex-1 px-3 sm:px-4 py-2 rounded-xl border border-gray-200 text-sm sm:text-base">
+        <button id="deposit-btn" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-xl font-semibold text-sm sm:text-base">Пополнить</button>
       </div>
-      <div class="mt-4 text-center">
-        <button id="stripe-btn" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition w-full">💳 Пополнить через карту (Stripe)</button>
+      <div class="mt-3 sm:mt-4 text-center">
+        <button id="stripe-btn" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base w-full">💳 Пополнить через карту (Stripe)</button>
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-xl p-6">
-      <h3 class="text-xl font-bold text-gray-800 mb-4">📋 История операций</h3>
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6">
+      <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">📋 История операций</h3>
       <div id="transactions-list" class="space-y-2"></div>
     </div>
   </div>
@@ -46,6 +46,7 @@
   <script src="script.js"></script>
   <script>
     if (!App.getToken()) window.location.href = 'login.html';
+    App.init(); // чтобы показать кнопку выхода
 
     async function loadWallet() {
       const res = await fetch('/api/wallet', { headers: { 'Authorization': 'Bearer ' + App.getToken() } });
@@ -53,13 +54,13 @@
       document.getElementById('balance-amount').textContent = data.balance.toFixed(2) + ' ₽';
       const list = document.getElementById('transactions-list');
       list.innerHTML = data.transactions.length ? data.transactions.map(t => `
-        <div class="flex justify-between bg-gray-50 p-3 rounded-xl">
+        <div class="flex flex-col sm:flex-row justify-between bg-gray-50 p-2 sm:p-3 rounded-xl text-sm sm:text-base">
           <span>${t.type === 'deposit' ? '💵 Пополнение' : t.type === 'purchase' ? '🛒 Покупка' : t.type === 'sale' ? '💰 Продажа' : '↩️ Возврат'}</span>
           <span class="font-semibold">${t.amount.toFixed(2)} ₽</span>
           <span>${t.status === 'pending' ? '⏳' : '✅'}</span>
-          <span class="text-gray-500">${new Date(t.createdAt).toLocaleString()}</span>
+          <span class="text-gray-500 text-xs sm:text-sm">${new Date(t.createdAt).toLocaleString()}</span>
         </div>
-      `).join('') : '<p class="text-gray-400">Нет операций</p>';
+      `).join('') : '<p class="text-gray-400 text-sm">Нет операций</p>';
     }
 
     document.getElementById('deposit-btn').addEventListener('click', async () => {
@@ -78,31 +79,19 @@
       }
     });
 
-    // Кнопка Stripe
     document.getElementById('stripe-btn').addEventListener('click', async () => {
       const amount = parseFloat(document.getElementById('deposit-amount').value);
-      if (!amount || amount <= 0) {
-        alert('Введите сумму для пополнения');
-        return;
-      }
-      try {
-        const res = await fetch('/api/stripe/create-checkout-session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + App.getToken()
-          },
-          body: JSON.stringify({ amount })
-        });
-        const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url; // перенаправление на Stripe Checkout
-        } else {
-          alert(data.error || 'Ошибка создания сессии');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Ошибка соединения');
+      if (!amount || amount <= 0) return alert('Введите сумму');
+      const res = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + App.getToken() },
+        body: JSON.stringify({ amount })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Ошибка');
       }
     });
 

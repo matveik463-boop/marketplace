@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Объявление — Marketplace</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css">
@@ -10,65 +10,265 @@
 </head>
 <body class="antialiased bg-gray-50">
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-      <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
-      <div class="flex items-center gap-4">
-        <a href="wallet.html" class="text-gray-700 hover:text-indigo-600 font-medium transition">💰 Кошелёк</a>
-        <a href="profile.html" class="text-gray-700 hover:text-indigo-600 font-medium transition">👤 Профиль</a>
-        <div id="notification-bell" class="hidden relative cursor-pointer text-xl">
-          🔔 <span id="notification-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
-        </div>
-        <button id="logout-btn" class="hidden bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-lg text-sm">Выйти</button>
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex justify-between items-center h-auto sm:h-16 py-2 sm:py-0 flex-wrap">
+      <a href="index.html" class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
+      <div class="flex items-center gap-2 sm:gap-4 flex-wrap">
+        <a href="wallet.html" class="text-gray-700 hover:text-indigo-600 font-medium transition text-sm sm:text-base">💰 Кошелёк</a>
+        <a href="profile.html" class="text-gray-700 hover:text-indigo-600 font-medium transition text-sm sm:text-base">👤 Профиль</a>
+        <button id="logout-btn" class="hidden bg-gray-200 hover:bg-gray-300 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm">Выйти</button>
       </div>
     </div>
   </nav>
 
-  <div class="max-w-4xl mx-auto px-4 pt-24 pb-12">
-    <!-- Само объявление -->
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+  <div class="max-w-4xl mx-auto px-2 sm:px-4 pt-20 sm:pt-24 pb-8 sm:pb-12">
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-6 sm:mb-8">
       <div id="listing-detail"></div>
     </div>
 
-    <!-- Чат -->
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
-      <h3 class="text-xl font-bold text-gray-800 mb-4">💬 Чат по объявлению</h3>
-      <div id="messages-box" class="h-64 overflow-y-auto border border-gray-200 rounded-xl p-3 mb-4"></div>
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-6 sm:mb-8">
+      <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">💬 Чат по объявлению</h3>
+      <div id="messages-box" class="h-48 sm:h-64 overflow-y-auto border border-gray-200 rounded-xl p-2 sm:p-3 mb-3 sm:mb-4"></div>
       <div class="flex gap-2">
-        <textarea id="message-input" placeholder="Сообщение..." class="flex-1 px-4 py-2 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none resize-none"></textarea>
-        <button id="send-message-btn" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-lg transition">Отправить</button>
+        <textarea id="message-input" placeholder="Сообщение..." class="flex-1 px-3 sm:px-4 py-2 rounded-xl border border-gray-200 text-sm sm:text-base resize-none"></textarea>
+        <button id="send-message-btn" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-xl font-semibold text-sm sm:text-base">Отправить</button>
       </div>
     </div>
 
-    <!-- Отзывы -->
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
-      <h3 class="text-xl font-bold text-gray-800 mb-4">⭐ Отзывы о продавце</h3>
-      <div id="reviews-list" class="space-y-3"></div>
-      <div class="mt-4 flex gap-3 items-end">
-        <select id="review-rating" class="px-4 py-2 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none">
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-6 sm:mb-8">
+      <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">⭐ Отзывы о продавце</h3>
+      <div id="reviews-list" class="space-y-2 sm:space-y-3"></div>
+      <div class="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-end">
+        <select id="review-rating" class="px-3 sm:px-4 py-2 rounded-xl border border-gray-200 text-sm sm:text-base">
           <option value="5">5 звёзд</option>
           <option value="4">4 звезды</option>
           <option value="3">3 звезды</option>
           <option value="2">2 звезды</option>
           <option value="1">1 звезда</option>
         </select>
-        <textarea id="review-text" placeholder="Ваш отзыв" class="flex-1 px-4 py-2 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none resize-none"></textarea>
-        <button id="submit-review" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-lg transition">Оставить отзыв</button>
+        <textarea id="review-text" placeholder="Ваш отзыв" class="flex-1 px-3 sm:px-4 py-2 rounded-xl border border-gray-200 text-sm sm:text-base resize-none"></textarea>
+        <button id="submit-review" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 sm:px-6 py-2 rounded-xl font-semibold text-sm sm:text-base">Оставить отзыв</button>
       </div>
     </div>
 
-    <!-- Эскроу -->
-    <div id="escrow-section" class="hidden bg-white rounded-2xl shadow-xl p-6">
-      <h3 class="text-xl font-bold text-gray-800 mb-2">🛡️ Статус сделки</h3>
-      <div id="escrow-info" class="mb-4"></div>
-      <div class="flex gap-3">
-        <button id="confirm-escrow" class="hidden bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-lg transition">Подтвердить получение</button>
-        <button id="cancel-escrow" class="hidden bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-xl font-semibold transition">Отменить сделку</button>
+    <div id="escrow-section" class="hidden bg-white rounded-2xl shadow-xl p-4 sm:p-6">
+      <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">🛡️ Статус сделки</h3>
+      <div id="escrow-info" class="mb-3 sm:mb-4"></div>
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <button id="confirm-escrow" class="hidden bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 sm:px-6 py-2 rounded-xl font-semibold text-sm sm:text-base">Подтвердить получение</button>
+        <button id="cancel-escrow" class="hidden bg-gray-200 hover:bg-gray-300 px-4 sm:px-6 py-2 rounded-xl font-semibold text-sm sm:text-base">Отменить сделку</button>
       </div>
     </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
-  <script src="listing-logic.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const listingId = urlParams.get('id');
+    if (!listingId) window.location.href = 'index.html';
+
+    let currentUser = App.getUser();
+    let sellerId = null;
+    let socket;
+
+    // Инициализируем навигацию (кнопка выхода, имя пользователя)
+    if (currentUser) App.init();
+
+    async function loadListing() {
+      const res = await fetch('/api/listings/' + listingId);
+      const listing = await res.json();
+      if (res.status === 404) {
+        document.getElementById('listing-detail').innerHTML = '<p>Объявление не найдено</p>';
+        return;
+      }
+      sellerId = listing.userId;
+      document.getElementById('listing-detail').innerHTML = `
+        <h1 class="text-xl sm:text-2xl font-bold">${listing.title}</h1>
+        <div class="images my-3 sm:my-4">${listing.images.map(img => `<img src="${img}" class="w-full sm:max-w-sm rounded-lg mb-2">`).join('')}</div>
+        <p class="text-base sm:text-lg"><strong>Цена:</strong> ${listing.price} ₽</p>
+        <p class="text-sm sm:text-base"><strong>Категория:</strong> ${listing.category}</p>
+        <p class="text-sm sm:text-base"><strong>Состояние:</strong> ${listing.condition}</p>
+        <p class="text-sm sm:text-base"><strong>Местоположение:</strong> ${listing.location || 'Не указано'}</p>
+        <p class="text-sm sm:text-base mt-2">${listing.description}</p>
+        <p class="text-sm sm:text-base mt-2">Продавец: ${listing.sellerName} ${listing.sellerPhone ? '📞 ' + listing.sellerPhone : ''}</p>
+        <p class="text-sm sm:text-base">Рейтинг: ${'⭐'.repeat(Math.round(listing.sellerRating || 0))} (${listing.sellerRating || 0})</p>
+        <div class="flex flex-wrap gap-2 mt-3 sm:mt-4">
+          <button id="fav-btn" class="text-sm sm:text-base">${App.isFavorite(listingId) ? '❌ Убрать из избранного' : '⭐ В избранное'}</button>
+          ${currentUser && currentUser.id === listing.userId ? `<button onclick="markAsSold()" class="text-sm sm:text-base">Продано</button>` : ''}
+          ${(currentUser && currentUser.id !== listing.userId && listing.status === 'active') ? `<button id="buy-btn" class="text-sm sm:text-base">Купить за ${listing.price} ₽</button>` : ''}
+        </div>
+      `;
+
+      document.getElementById('fav-btn').addEventListener('click', () => App.toggleFavorite(listingId));
+      const buyBtn = document.getElementById('buy-btn');
+      if (buyBtn) {
+        buyBtn.addEventListener('click', buyListing);
+      }
+
+      loadReviews(listing.userId);
+      loadEscrow();
+    }
+
+    async function buyListing() {
+      if (!confirm('Вы уверены?')) return;
+      const data = await App.makePurchase(listingId);
+      if (data.success) {
+        alert('Покупка совершена!');
+        localStorage.setItem('lastEscrowId', data.escrowId);
+        loadListing();
+      } else {
+        alert(data.error || 'Ошибка');
+      }
+    }
+
+    async function loadReviews(userId) {
+      const res = await fetch('/api/reviews/user/' + userId);
+      const reviews = await res.json();
+      const container = document.getElementById('reviews-list');
+      container.innerHTML = reviews.length ? reviews.map(r => `
+        <div class="bg-gray-50 p-2 sm:p-3 rounded-xl">
+          <strong>${r.authorName}</strong> ${'⭐'.repeat(r.rating)}<br>
+          <small>${r.text || ''}</small>
+        </div>
+      `).join('') : '<p class="text-sm text-gray-400">Нет отзывов</p>';
+    }
+
+    document.getElementById('submit-review').addEventListener('click', async () => {
+      if (!currentUser) return alert('Войдите');
+      if (currentUser.id === sellerId) return alert('Нельзя самому себе');
+      const rating = document.getElementById('review-rating').value;
+      const text = document.getElementById('review-text').value;
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + App.getToken() },
+        body: JSON.stringify({ userId: sellerId, rating: parseInt(rating), text })
+      });
+      if (res.ok) {
+        alert('Отзыв добавлен');
+        loadReviews(sellerId);
+        loadListing();
+        document.getElementById('review-text').value = '';
+      } else {
+        alert((await res.json()).error || 'Ошибка');
+      }
+    });
+
+    async function loadEscrow() {
+      if (!currentUser) return;
+      const res = await fetch('/api/wallet', { headers: { 'Authorization': 'Bearer ' + App.getToken() } });
+      if (!res.ok) return;
+      const data = await res.json();
+      const pending = data.transactions.find(t => t.listingId === listingId && t.status === 'pending' && t.type === 'purchase');
+      if (pending) {
+        document.getElementById('escrow-section').style.display = 'block';
+        document.getElementById('escrow-info').innerHTML = `<p>Сделка на сумму ${pending.amount} ₽. Ожидает подтверждения.</p>`;
+        document.getElementById('confirm-escrow').style.display = 'inline-block';
+        document.getElementById('cancel-escrow').style.display = 'inline-block';
+        document.getElementById('confirm-escrow').onclick = confirmEscrow;
+        document.getElementById('cancel-escrow').onclick = cancelEscrow;
+      } else {
+        document.getElementById('escrow-section').style.display = 'none';
+      }
+    }
+
+    async function confirmEscrow() {
+      const escrowId = localStorage.getItem('lastEscrowId');
+      if (!escrowId) return alert('Сделка не найдена');
+      if (!confirm('Подтверждаете получение?')) return;
+      const res = await fetch('/api/escrow/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + App.getToken() },
+        body: JSON.stringify({ escrowId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Подтверждено!');
+        localStorage.removeItem('lastEscrowId');
+        loadListing();
+      } else {
+        alert(data.error || 'Ошибка');
+      }
+    }
+
+    async function cancelEscrow() {
+      const escrowId = localStorage.getItem('lastEscrowId');
+      if (!escrowId) return alert('Сделка не найдена');
+      if (!confirm('Отменить сделку?')) return;
+      const res = await fetch('/api/escrow/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + App.getToken() },
+        body: JSON.stringify({ escrowId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Отменено');
+        localStorage.removeItem('lastEscrowId');
+        loadListing();
+      } else {
+        alert(data.error || 'Ошибка');
+      }
+    }
+
+    function connectSocket() {
+      const token = App.getToken();
+      if (!token) return;
+      socket = io('/', { auth: { token } });
+      socket.on('connect', () => {
+        loadMessagesHistory();
+      });
+      socket.on('new_message', (msg) => {
+        if (msg.listingId === listingId) addMessageToChat(msg);
+      });
+      socket.on('message_sent', (msg) => {
+        if (msg.listingId === listingId) {
+          addMessageToChat(msg);
+          document.getElementById('message-input').value = '';
+        }
+      });
+    }
+
+    async function loadMessagesHistory() {
+      const res = await fetch('/api/messages/' + listingId, {
+        headers: { 'Authorization': 'Bearer ' + App.getToken() }
+      });
+      const msgs = await res.json();
+      const box = document.getElementById('messages-box');
+      box.innerHTML = msgs.map(m => `<div class="text-sm sm:text-base"><strong>${m.senderName}:</strong> ${m.text}</div>`).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function addMessageToChat(msg) {
+      const box = document.getElementById('messages-box');
+      const div = document.createElement('div');
+      div.innerHTML = `<strong>${msg.senderName}:</strong> ${msg.text}`;
+      div.className = 'text-sm sm:text-base';
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    document.getElementById('send-message-btn').addEventListener('click', () => {
+      const text = document.getElementById('message-input').value.trim();
+      if (!text || !socket) return;
+      socket.emit('send_message', { listingId, text });
+    });
+
+    async function markAsSold() {
+      if (!confirm('Отметить как проданное?')) return;
+      await fetch('/api/listings/' + listingId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + App.getToken() },
+        body: JSON.stringify({ status: 'sold' })
+      });
+      alert('Статус обновлён');
+      loadListing();
+    }
+
+    if (currentUser) {
+      connectSocket();
+    } else {
+      loadMessagesHistory();
+    }
+    loadListing();
+  </script>
 </body>
 </html>
