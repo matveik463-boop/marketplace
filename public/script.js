@@ -118,7 +118,6 @@ const App = {
   },
 
   toggleTheme: () => {
-    // Создаём анимационный оверлей
     const overlay = document.createElement('div');
     overlay.id = 'theme-overlay';
     document.body.appendChild(overlay);
@@ -131,7 +130,6 @@ const App = {
     const maxRadius = Math.sqrt(centerX ** 2 + centerY ** 2);
 
     if (App.theme === 'light') {
-      // Переключаем на тёмную: анимация схлопывания от краёв к центру
       circle.style.width = `${maxRadius * 2}px`;
       circle.style.height = `${maxRadius * 2}px`;
       circle.style.left = `${centerX - maxRadius}px`;
@@ -150,7 +148,6 @@ const App = {
         overlay.remove();
       }, 500);
     } else {
-      // Переключаем на светлую: анимация расширения от центра
       circle.style.width = '0px';
       circle.style.height = '0px';
       circle.style.left = `${centerX}px`;
@@ -174,7 +171,30 @@ const App = {
       }, 500);
     }
   },
-  // ---------- КОНЕЦ БЛОКА ТЕМЫ ----------
+
+  // ---------- Мобильная навигация ----------
+  initMobileNav: () => {
+    const nav = document.querySelector('.glass-nav');
+    if (!nav) return;
+    const links = nav.querySelectorAll('a[data-page]');
+    const glider = nav.querySelector('.glass-glider');
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+
+    links.forEach((link, index) => {
+      const page = link.getAttribute('data-page');
+      if ((page === 'home' && (currentPath === 'index.html' || currentPath === '')) ||
+          (page === 'create' && currentPath === 'create-listing.html') ||
+          (page === 'wallet' && currentPath === 'wallet.html') ||
+          (page === 'profile' && currentPath === 'profile.html')) {
+        link.classList.add('active');
+        if (glider) {
+          glider.style.transform = `translateX(${index * 100}%)`;
+        }
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  },
 
   init: () => {
     const user = App.getUser();
@@ -246,7 +266,7 @@ const App = {
   }
 };
 
-// Глобальный обработчик для кнопки темы и ripple
+// Глобальные обработчики
 document.addEventListener('DOMContentLoaded', () => {
   if (App.getUser()) {
     App.init();
@@ -254,10 +274,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   App.loadListings();
 
+  // Кнопка темы (если есть)
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => App.toggleTheme());
   }
+
+  // Инициализация мобильной навигации (везде, где есть .glass-nav)
+  App.initMobileNav();
 });
 
 // Ripple-эффект для всех кнопок

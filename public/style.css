@@ -8,7 +8,7 @@
   --accent: #4F46E5;
   --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
   --transition-speed: 0.3s;
-  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.25);
   --glass-text: #1F2937;
 }
 
@@ -20,7 +20,7 @@
   --border: #334155;
   --accent: #818CF8;
   --shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
-  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-bg: rgba(30, 41, 59, 0.7);
   --glass-text: #e5e5e5;
 }
 
@@ -266,7 +266,6 @@ input:focus, textarea:focus, select:focus {
     display: none !important;
   }
 
-  /* Нижняя панель с glass-radio-group */
   .mobile-nav {
     display: flex !important;
     position: fixed;
@@ -300,7 +299,6 @@ input:focus, textarea:focus, select:focus {
   h3 { font-size: 18px; }
   p, span, a, input, textarea, select { font-size: 14px; }
 
-  /* Уменьшаем кнопку на мобильных */
   .cir-btn {
     height: 44px;
     padding: 0 20px;
@@ -388,10 +386,10 @@ input:focus, textarea:focus, select:focus {
   background: #f0f0f0;
 }
 
-/* ===== Glass Radio Group (нижняя мобильная панель) ===== */
-.glass-radio-group {
-  --bg: rgba(255, 255, 255, 0.25);
-  --text: var(--text-secondary);
+/* ===== Нижняя панель со стеклянным глайдером ===== */
+.glass-nav {
+  --bg: var(--glass-bg);
+  --text: var(--glass-text);
   display: flex;
   position: relative;
   background: var(--bg);
@@ -407,18 +405,10 @@ input:focus, textarea:focus, select:focus {
   margin: 0 auto;
 }
 
-.dark .glass-radio-group {
-  --bg: rgba(30, 41, 59, 0.7);
-  --text: #e5e5e5;
-}
-
-.glass-radio-group input {
-  display: none;
-}
-
-.glass-radio-group label {
+.glass-nav a {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-width: 75px;
@@ -434,11 +424,7 @@ input:focus, textarea:focus, select:focus {
   text-decoration: none;
 }
 
-.glass-radio-group label:hover {
-  color: var(--text-primary);
-}
-
-.glass-radio-group input:checked + label {
+.glass-nav a.active {
   color: #fff;
 }
 
@@ -446,23 +432,13 @@ input:focus, textarea:focus, select:focus {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: calc(100% / 4); /* 4 пункта: Главная, Подать, Кошелёк, Профиль */
+  width: calc(100% / 4); /* 4 ссылки */
   border-radius: 1rem;
   z-index: 1;
   transition:
     transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56),
     background 0.4s ease-in-out,
     box-shadow 0.4s ease-in-out;
-}
-
-/* Позиции глайдера для каждого пункта */
-#glass-home:checked ~ .glass-glider { transform: translateX(0%); }
-#glass-create:checked ~ .glass-glider { transform: translateX(100%); }
-#glass-wallet:checked ~ .glass-glider { transform: translateX(200%); }
-#glass-profile:checked ~ .glass-glider { transform: translateX(300%); }
-
-/* Стиль глайдера (градиент) */
-.glass-glider {
   background: linear-gradient(135deg, #4F46E5, #7C3AED);
   box-shadow:
     0 0 18px rgba(79, 70, 229, 0.5),
