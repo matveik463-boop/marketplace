@@ -35,7 +35,7 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
 const RAILWAY_URL = process.env.RAILWAY_URL || 'https://marketplace-production-33bc.up.railway.app';
 
-// Безопасность с правильной CSP
+// Безопасность с CSP
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -70,7 +70,6 @@ const generalLimiter = rateLimit({
 });
 app.use(generalLimiter);
 
-// Аутентификация с возвратом времени блокировки
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 5,
@@ -382,10 +381,20 @@ app.post('/api/wallet/deposit', authenticateToken, paymentLimiter, (req, res) =>
   res.json({ balance: newBalance });
 });
 
-// ---------- STRIPE ----------
+// ---------- STRIPE (исправленный блок) ----------
 app.post('/api/stripe/create-checkout-session', authenticateToken, paymentLimiter, async (req, res) => {
-  const { amount } = req.body;
-  if (!amount || amount <= 0) return res.status(400).json({ error: 'Укажите сумму' });
+  let { amount } = req.body;
+
+  // Валидация суммы
+  const amountNum = parseFloat(amount);
+  if (isNaN(amountNum) || amountNum <= 0) {
+    return res.status(400).json({ error: 'Введите положительную сумму' });
+  }
+  if (amountNum > 1000000) { // максимум 1 млн рублей
+    return res.status(400).json({ error: 'Сумма не должна превышать 1 000 000 рублей' });
+  }
+
+  const unitAmount = Math.round(amountNum * 100); // копейки
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -396,7 +405,7 @@ app.post('/api/stripe/create-checkout-session', authenticateToken, paymentLimite
           product_data: {
             name: 'Пополнение баланса Marketplace',
           },
-          unit_amount: amount * 100,
+          unit_amount: unitAmount,
         },
         quantity: 1,
       }],
@@ -412,7 +421,7 @@ app.post('/api/stripe/create-checkout-session', authenticateToken, paymentLimite
     res.json({ url: session.url });
   } catch (err) {
     console.error('Stripe error:', err);
-    res.status(500).json({ error: 'Ошибка создания сессии' });
+    res.status(500).json({ error: 'Ошибка создания сессии. Попробуйте позже.' });
   }
 });
 

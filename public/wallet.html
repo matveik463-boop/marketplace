@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="antialiased bg-gray-50">
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
+  <nav class="desktop-nav fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex justify-between items-center h-auto sm:h-16 py-2 sm:py-0 flex-wrap">
       <a href="index.html" class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
       <div class="flex items-center gap-2 sm:gap-4 flex-wrap">
@@ -19,7 +19,14 @@
     </div>
   </nav>
 
-  <div class="max-w-lg mx-auto px-2 sm:px-4 pt-20 sm:pt-24 pb-8 sm:pb-12">
+  <div class="mobile-nav" style="display: none;">
+    <a href="index.html"><span class="icon">🏠</span>Главная</a>
+    <a href="create-listing.html"><span class="icon">➕</span>Подать</a>
+    <a href="wallet.html" class="active"><span class="icon">💰</span>Кошелёк</a>
+    <a href="profile.html"><span class="icon">👤</span>Профиль</a>
+  </div>
+
+  <div class="max-w-lg mx-auto px-2 sm:px-4 pt-4 sm:pt-24 pb-8 sm:pb-12">
     <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-4 sm:mb-6 text-center">
       <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2">💰 Мой кошелёк</h2>
       <p class="text-gray-600 text-sm sm:text-base">Баланс</p>
@@ -46,7 +53,7 @@
   <script src="script.js"></script>
   <script>
     if (!App.getToken()) window.location.href = 'login.html';
-    App.init(); // чтобы показать кнопку выхода
+    App.init();
 
     async function loadWallet() {
       const res = await fetch('/api/wallet', { headers: { 'Authorization': 'Bearer ' + App.getToken() } });

@@ -11,7 +11,8 @@
 <body class="antialiased">
   <div id="particles-container"></div>
 
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
+  <!-- Десктопная навигация -->
+  <nav class="desktop-nav fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex justify-between items-center h-auto sm:h-16 py-2 sm:py-0 flex-wrap">
       <a href="index.html" class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">🏠 Marketplace</a>
       <div class="flex items-center gap-2 sm:gap-4 flex-wrap">
@@ -30,7 +31,17 @@
     </div>
   </nav>
 
-  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8 sm:pb-12">
+  <!-- Мобильная нижняя панель -->
+  <div class="mobile-nav" style="display: none;">
+    <a href="index.html" class="active"><span class="icon">🏠</span>Главная</a>
+    <a href="create-listing.html"><span class="icon">➕</span>Подать</a>
+    <a href="wallet.html"><span class="icon">💰</span>Кошелёк</a>
+    <a href="profile.html"><span class="icon">👤</span>Профиль</a>
+    <button id="theme-toggle-mobile"><span class="icon">🌓</span>Тема</button>
+  </div>
+
+  <!-- Контент -->
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 pt-4 sm:pt-24 pb-8 sm:pb-12">
     <div class="glass p-4 sm:p-6 rounded-2xl shadow-lg mb-6 sm:mb-8 fade-in">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         <input type="text" id="search-input" placeholder="Что ищете?" class="col-span-1 sm:col-span-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 text-sm sm:text-base">
@@ -66,6 +77,10 @@
       document.getElementById('search-input').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') App.loadListings(1);
       });
+      const mobileThemeBtn = document.getElementById('theme-toggle-mobile');
+      if (mobileThemeBtn) {
+        mobileThemeBtn.addEventListener('click', () => App.toggleTheme());
+      }
     });
 
     const isMobile = window.innerWidth < 768;
